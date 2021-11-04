@@ -1,0 +1,7 @@
+1. 建造者模式：将一个复杂对应的构建和它的表示分离，同样的构建过程可以创建不同的表示
+
+
+Builder：抽象建造者  --》  CakeBuilder
+ConcreteBuilder：具体建造者  --》MakeBuilder
+Director：指挥者  --》CakeSeller
+Product：产品角色 --》Cake

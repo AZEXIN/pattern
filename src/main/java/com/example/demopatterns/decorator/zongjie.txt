@@ -1,0 +1,7 @@
+1. 装饰器：动态的给一个对象增加一些额外的职责。
+2：角色：
+Component: 抽象构件
+ConcreteComponent: 具体构件
+Decorator: 抽象装饰类
+ConcreteDecorator: 具体装饰类
+3.

@@ -30,7 +30,11 @@ public class ImageProcessor {
         this.urlList = new ArrayList<>();
     }
 
-    public void process(int idx, int size) {
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void process() {
         RestTemplate restTemplate=new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept-Language","zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
@@ -61,17 +65,16 @@ public class ImageProcessor {
 
 
     public static void main(String[] args) {
-
-
-        String world="彭于晏";
-        StringBuilder url = new StringBuilder("https://image.baidu.com/search/acjson?");
+        String baseUrl="https://image.baidu.com/search/acjson?";
+        String world="淮扬菜";
+        StringBuilder url = new StringBuilder(baseUrl);
         url.append("charset=UTF-8");
         url.append("&tn=resultjson_com");
         url.append("&ipn=rj");
         url.append("&ct=201326592");
         url.append("&fp=result");
         url.append("&cl=2");
-        url.append("&lm=-1");//动图
+        url.append("&lm=-1");
         url.append("&ie=utf-8");
         url.append("&oe=utf-8");
         url.append("&st=-1");
@@ -79,23 +82,19 @@ public class ImageProcessor {
         url.append("&istype=2");
         url.append("&qc=");
         url.append("&nc=1");
-        url.append("&pn=0");
-        url.append("&rn=10");//每页数量
         url.append("&word=");
         url.append(world);
-
-
-
-
-
-
+        int current;
+        int end=0;
         ImageProcessor processor = new ImageProcessor(url.toString(),world);
-
-        int start = 0, size = 10, limit = 1; // 定义爬取开始索引、每次爬取数量、总共爬取数量
-
-        for(int i=start;i<start+limit;i+=size)
-            processor.process(i, size);
-
+        for(int i=1;i<=10;i++){
+            current=60*i;
+            end+=30;
+            url.append("&pn=").append(end);// 最后索引
+            url.append("&rn=").append(current);//当前开始索引
+            processor.setUrl(url.toString());
+            processor.process();
+        }
         processor.pipelineData();
 
     }

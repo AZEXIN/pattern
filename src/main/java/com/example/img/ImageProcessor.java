@@ -22,7 +22,7 @@ public class ImageProcessor {
     private List<String> urlList;
     private String word;
 
-    public ImageProcessor(String url,String world) {
+    public ImageProcessor(String url, String world) {
         this.url = url;
         this.word = world;
         this.pipeline = new SougouImgPipeline();
@@ -35,38 +35,38 @@ public class ImageProcessor {
     }
 
     public void process() {
-        RestTemplate restTemplate=new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept-Language","zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
-        headers.add("Connection","keep-alive");
-        headers.add("User-Agent","Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0");
-        headers.add("Upgrade-Insecure-Requests","1");
+        headers.add("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
+        headers.add("Connection", "keep-alive");
+        headers.add("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0");
+        headers.add("Upgrade-Insecure-Requests", "1");
         HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url.toString(), HttpMethod.GET,requestEntity,String.class);
-        if(responseEntity.getStatusCodeValue()== HttpStatus.SC_OK){
-            JSONObject jsonObject=JSONObject.parseObject(responseEntity.getBody());
-            JSONArray items = ((JSONArray)jsonObject.get("data"));
-            for(Object item : items){
-                JSONObject jsonObject1= (JSONObject) item;
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url.toString(), HttpMethod.GET, requestEntity, String.class);
+        if (responseEntity.getStatusCodeValue() == HttpStatus.SC_OK) {
+            JSONObject jsonObject = JSONObject.parseObject(responseEntity.getBody());
+            JSONArray items = ((JSONArray) jsonObject.get("data"));
+            for (Object item : items) {
+                JSONObject jsonObject1 = (JSONObject) item;
                 this.urlList.add(jsonObject1.getString("middleURL"));
             }
             this.dataList.add(items);
-        }else{
+        } else {
             System.out.println("请求失败");
         }
 
     }
 
     // 下载
-    public void pipelineData(){
+    public void pipelineData() {
         // 多线程
         pipeline.processSync(this.urlList, this.word);
     }
 
 
     public static void main(String[] args) {
-        String baseUrl="https://image.baidu.com/search/acjson?";
-        String world="淮扬菜";
+        String baseUrl = "https://image.baidu.com/search/acjson?";
+        String world = "淮扬菜";
         StringBuilder url = new StringBuilder(baseUrl);
         url.append("charset=UTF-8");
         url.append("&tn=resultjson_com");
@@ -85,11 +85,11 @@ public class ImageProcessor {
         url.append("&word=");
         url.append(world);
         int current;
-        int end=0;
-        ImageProcessor processor = new ImageProcessor(url.toString(),world);
-        for(int i=1;i<=10;i++){
-            current=60*i;
-            end+=30;
+        int end = 0;
+        ImageProcessor processor = new ImageProcessor(url.toString(), world);
+        for (int i = 1; i <= 10; i++) {
+            current = 60 * i;
+            end += 30;
             url.append("&pn=").append(end);// 最后索引
             url.append("&rn=").append(current);//当前开始索引
             processor.setUrl(url.toString());
